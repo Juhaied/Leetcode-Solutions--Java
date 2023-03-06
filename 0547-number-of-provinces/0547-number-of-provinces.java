@@ -1,26 +1,40 @@
 class Solution {
-public static   void dfs(int graph[][],int i){
-        graph[i][i] = 0;
-        for(int j = 0;j< graph.length;j++){
-            if(graph[i][j]==1){
-                graph[i][j] = 0;
-                dfs(graph,j);
+    public static int findCircleNum(int[][] isConnected) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int n = isConnected.length;
+        for(int i=0;i<n;i++)
+            adj.add(new ArrayList());
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i == j)
+                    continue;
+                if(isConnected[i][j] == 1)
+                    adj.get(i).add(j);
             }
         }
-    }
-
-    static int findCircleNum(int[][] graph){
         int ans = 0;
-        int n = graph.length;
-
-        for(int i = 0;i<n;i++){
-
-                if(graph[i][i]==0){
-                    continue;
-                }
+        boolean vis[] = new boolean[n];
+        for(int i=0;i<n;i++)
+        {
+            if(vis[i] == false)
+            {
                 ans++;
-                dfs(graph,i);
+                dfs(adj,i,vis);
+            }
         }
         return ans;
+    }
+    static  void dfs(List<List<Integer>> adj,int src,boolean[] vis)
+    {
+        vis[src] = true;
+
+        for(int it : adj.get(src))
+        {
+            if(vis[it] == false)
+                dfs(adj,it,vis);
+        }
     }
 }
